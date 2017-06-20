@@ -1,0 +1,119 @@
+初等算法学习
+一.随机不重复数组
+
+直到今天在《Programming pearls》里看到这个很完美的办法： 
+
+for(i = 0; i < n; i++) 
+{ 
+	x[i] = i; 
+} 
+for(i = 0; i < k; i++) 
+{ 
+	t = rand(i,n-1);
+  	swap(x[i], x[t]); 
+	out(x[i]); 
+}  
+
+demo1：
+ 在[a,b]区间内生成随机不重复的n个数
+  public static int[] createRandomData(int a,int b,int n)
+    {
+        int [] result = new  int[n];
+
+        //获取区间长度
+        int c = b - a + 1;
+
+        if (n>c)
+        {
+            System.out.print("数据出错");
+            return result;
+        }
+
+        //创建数组[a,b]
+        int [] ab = new int[c];
+
+        //创建在[a，b]范围内长度为c的数组
+
+        for (int i = 0;i <c;i++)
+        {
+            ab[i] = a + i;
+        }
+
+
+
+        //创建随机数组
+        for (int i = 0; i < n; i++)
+        {
+            //随机下标[0，c]
+             Random r = new Random();
+             int index = c - i;
+             int x = r.nextInt(index);
+            //交换
+             int y = ab[index-1];
+             int d = ab[x];
+             int temp = y;
+             ab[index-1] = d;
+             ab[x] = y;
+
+        }
+
+        for (int i = 0;i< n;i++)
+        {
+            int index = c - i - 1;
+            result[i] = ab[index];
+            System.out.println(ab[index]);
+        }
+
+        return result;
+    }
+
+
+其中，rand(a,b)产生一个 a 到 b 之间的随机数，swap(a,b)交换a和b的值，out(a)把a输出作为结果。 我们来看看这个算法的完美之处吧！  首先，x数组里把0到n-1的所有数都存储了，而最后输出的都是x数组里的值，所以满足输出的数是k个0到n-1的数。  然后，我们对于第 i 次随机，产生一个 i 到 n-1 的下标 t ，并把x[t] 和x[i]交换，将其输出，这样每次产生的数都是之前没有出现过的数，因为之前出现过的数都在x[0] 到 x[i-1]里呢！这样就保证了输出数据的不重复性。  最后，我们考察输出数据的“随机性”，显然，因为交换操作，使得所有没有出现过的数都在x[i] 到 x[n-1]中存着呢，所以被选中的概率相等。
+
+二：最小可用ID
+ /*
+    01最小可用id
+    这一解法的关键基于这一事实:对于任何n个非负整数x1, x2, ..., xn,
+    如果 存在小于n的可用整数,必然存在某个xi不在[0, n)这个范围内。
+    否则这些整数 一定是0, 1, ..., n − 1的某个排列,这种情况下,最小的可用整数是n
+    */
+
+    //查找最小id，返回-1未查找到
+
+    public static int findMinID(int [] a)
+    {
+
+        //创建数组保存状态
+        int [] b = new int[a.length];
+        for (int i = 0;i<a.length;i++)
+        {
+            b[i] = 0;
+        }
+
+        //遍历数组
+        for (int i = 0; i<a.length; i++)
+        {
+            int ai = a[i];
+
+            if (ai < a.length)
+            {
+                b[ai] = 1;
+            }
+        }
+
+        //返回结果
+        for (int i = 0;i<b.length;i++)
+        {
+            int bi = b[i];
+            if (bi == 0)
+            {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+
+
+
+
